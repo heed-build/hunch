@@ -1,3 +1,6 @@
+// Changed by Hunch, 2026: renamed the error type, added SpecialTokens (read from tokenizer_config.json).
+// Derived from laya-mlx-swift (https://github.com/MstyAI/laya-mlx-swift, Apache-2.0); see NOTICE.
+
 import Foundation
 
 struct EncoderConfiguration: Decodable {
@@ -69,7 +72,7 @@ struct ModelConfiguration {
     guard FileManager.default.fileExists(atPath: encoderURL.path),
       FileManager.default.fileExists(atPath: agentURL.path),
       FileManager.default.fileExists(atPath: directory.appending(path: "model.safetensors").path)
-    else { throw LayaError.modelNotPrepared(directory) }
+    else { throw HunchError.modelNotPrepared(directory) }
 
     let encoder = try decoder.decode(EncoderConfiguration.self, from: Data(contentsOf: encoderURL))
     let agent = try decoder.decode(AgentConfiguration.self, from: Data(contentsOf: agentURL))
@@ -80,7 +83,41 @@ struct ModelConfiguration {
       agent.headMaxLength > 4,
       agent.headMaxLength < agent.maxLength,
       agent.maxLength <= encoder.maxPositionEmbeddings
-    else { throw LayaError.invalidModel("The Laya model configuration is not supported.") }
+    else { throw HunchError.invalidModel("The checkpoint configuration is not supported.") }
     return Self(encoder: encoder, agent: agent)
+  }
+}
+
+/// The tokenizer's special tokens, from `tokenizer_config.json`. ModernBERT uses `[CLS]`/`[SEP]`/`[MASK]`/`[PAD]`;
+/// mmBERT (the multilingual checkpoint) uses `<bos>`/`<eos>`/`<mask>`/`<pad>`, so they cannot be hardcoded.
+struct SpecialTokens: Equatable, Sendable {
+  let cls: String
+  let sep: String
+  let mask: String
+  let pad: String
+
+  static func load(from tokenizerDirectory: URL) throws -> SpecialTokens {
+    let url = tokenizerDirectory.appending(path: "tokenizer_config.json")
+    guard let data = try? Data(contentsOf: url) else {
+      throw HunchError.invalidModel("\(url.path) is missing.")
+    }
+    return try parse(data)
+  }
+
+  static func parse(_ data: Data) throws -> SpecialTokens {
+    guard let object = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] else {
+      throw HunchError.invalidModel("tokenizer_config.json is not a JSON object.")
+    }
+    // A token is either a string or an AddedToken object with its text in "content".
+    func token(_ key: String) throws -> String {
+      if let text = object[key] as? String, !text.isEmpty { return text }
+      if let added = object[key] as? [String: Any], let text = added["content"] as? String, !text.isEmpty {
+        return text
+      }
+      throw HunchError.invalidModel("tokenizer_config.json has no \(key).")
+    }
+    return SpecialTokens(
+      cls: try token("cls_token"), sep: try token("sep_token"), mask: try token("mask_token"),
+      pad: try token("pad_token"))
   }
 }

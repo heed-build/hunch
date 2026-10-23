@@ -10,3 +10,43 @@ The prompt construction and neural network architecture are adapted from Laya.
 The model is reimplemented with Apple's MLX Swift API. Model weights are
 downloaded separately from aac6fef/laya-mlx on Hugging Face and are not included
 in this repository.
+
+-------------------------------------------------------------------------------
+
+Hunch
+Copyright 2026 Hunch contributors (https://github.com/heed-build/hunch)
+
+Hunch is a fork of laya-mlx-swift (https://github.com/MstyAI/laya-mlx-swift),
+revision 353ba75d4ee377a0b23eb863470884cd154108de, licensed under Apache-2.0.
+The notice above is laya-mlx-swift's and is kept as published. Files Hunch
+changed carry a notice saying so at the top.
+
+Hunch runs Laya checkpoints. It downloads them from the origin repositories
+published by Convai Innovations on Hugging Face (convaiinnovations/laya and
+convaiinnovations/laya-multilingual, Apache-2.0) at pinned revisions, instead of
+from aac6fef/laya-mlx as stated above. Hunch does not include or redistribute
+model weights or tokenizer files. "Laya" names the checkpoints Hunch runs; Hunch
+is not affiliated with or endorsed by Convai Innovations or the Laya project.
+
+The parity fixtures in Tests/HunchTests/Fixtures/parity-*.json hold requests
+built from laya-mlx's parity cases and examples, and answers recorded by
+running laya-mlx (https://github.com/mizorewww/laya-mlx, Apache-2.0). The
+calibration format, temperature clamp and terminal-text findings follow laya-mlx
+and Laya. laya-mlx's notice:
+
+  laya-mlx
+  Copyright 2026 laya-mlx contributors
+
+  This product includes software derived from Laya:
+  https://github.com/NandhaKishorM/laya
+  Copyright Convai Innovations and Laya contributors. Licensed under Apache-2.0.
+  Original upstream source revision: 573e5b62696ba441230cd6be71d593331b5d23af
+
+  The token sequence construction, question rendering, confidence calculation,
+  presets, email utilities and language router are adapted from Laya.
+  The neural network is reimplemented using Apple's MLX, following Laya's
+  DecisionModel and the ModernBERT architecture in Hugging Face Transformers.
+  Model weights are downloaded separately from Convai Innovations on Hugging Face;
+  they are not included in this repository.
+
+Third-party dependencies and their notices: THIRD_PARTY_NOTICES.md.

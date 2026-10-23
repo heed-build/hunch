@@ -1,0 +1,12 @@
+{
+  "bos_token": "<bos>",
+  "cls_token": "<bos>",
+  "eos_token": "<eos>",
+  "extra_special_tokens": ["<start_of_turn>", "<end_of_turn>"],
+  "mask_token": "<mask>",
+  "model_max_length": 8192,
+  "pad_token": "<pad>",
+  "sep_token": "<eos>",
+  "tokenizer_class": "PreTrainedTokenizerFast",
+  "unk_token": "<unk>"
+}

@@ -1,0 +1,640 @@
+[
+ {
+  "name": "email",
+  "state": "{\"from\": \"user@example.com\", \"subject\": \"Duplicate charge on invoice #4411\", \"body\": \"We were billed twice for March. Please refund the duplicate today or we will cancel our plan.\"}",
+  "questions": {
+   "q0": {
+    "t": "choice",
+    "ins": "Which department should handle this email?",
+    "options": [
+     "billing: invoices, payments, refunds",
+     "technical: bugs, outages, system errors",
+     "sales: pricing, new contracts",
+     "other: everything else"
+    ]
+   },
+   "q1": {
+    "t": "score",
+    "ins": "How urgent is this request?",
+    "levels": [
+     "not urgent",
+     "soon",
+     "critical deadline or blocking issue"
+    ]
+   },
+   "q2": {
+    "t": "noul",
+    "ins": "Does the customer ask for money back?",
+    "falseText": "no, the statement does not hold",
+    "trueText": "yes, the statement holds"
+   }
+  }
+ },
+ {
+  "name": "en",
+  "state": "{\"message\": \"I was charged twice for invoice 4411, please refund it today.\"}",
+  "questions": {
+   "q0": {
+    "t": "choice",
+    "ins": "Which department should handle this email?",
+    "options": [
+     "billing: invoices, payments, refunds",
+     "technical: bugs, outages, system errors",
+     "sales: pricing, new contracts",
+     "other: everything else"
+    ]
+   },
+   "q1": {
+    "t": "score",
+    "ins": "How urgent is this request?",
+    "levels": [
+     "not urgent",
+     "soon",
+     "critical deadline or blocking issue"
+    ]
+   },
+   "q2": {
+    "t": "noul",
+    "ins": "Does the customer ask for money back?",
+    "falseText": "no, the statement does not hold",
+    "trueText": "yes, the statement holds"
+   }
+  }
+ },
+ {
+  "name": "zh",
+  "state": "{\"message\": \"发票4411被重复扣款，请今天退款。\"}",
+  "questions": {
+   "q0": {
+    "t": "choice",
+    "ins": "Which department should handle this email?",
+    "options": [
+     "billing: invoices, payments, refunds",
+     "technical: bugs, outages, system errors",
+     "sales: pricing, new contracts",
+     "other: everything else"
+    ]
+   },
+   "q1": {
+    "t": "score",
+    "ins": "How urgent is this request?",
+    "levels": [
+     "not urgent",
+     "soon",
+     "critical deadline or blocking issue"
+    ]
+   },
+   "q2": {
+    "t": "noul",
+    "ins": "Does the customer ask for money back?",
+    "falseText": "no, the statement does not hold",
+    "trueText": "yes, the statement holds"
+   }
+  }
+ },
+ {
+  "name": "de",
+  "state": "{\"message\": \"Ich wurde zweimal für Rechnung 4411 belastet, bitte erstatten Sie den Betrag.\"}",
+  "questions": {
+   "q0": {
+    "t": "choice",
+    "ins": "Which department should handle this email?",
+    "options": [
+     "billing: invoices, payments, refunds",
+     "technical: bugs, outages, system errors",
+     "sales: pricing, new contracts",
+     "other: everything else"
+    ]
+   },
+   "q1": {
+    "t": "score",
+    "ins": "How urgent is this request?",
+    "levels": [
+     "not urgent",
+     "soon",
+     "critical deadline or blocking issue"
+    ]
+   },
+   "q2": {
+    "t": "noul",
+    "ins": "Does the customer ask for money back?",
+    "falseText": "no, the statement does not hold",
+    "trueText": "yes, the statement holds"
+   }
+  }
+ },
+ {
+  "name": "fr",
+  "state": "{\"message\": \"J'ai été facturé deux fois pour la facture 4411, remboursez-moi s'il vous plaît.\"}",
+  "questions": {
+   "q0": {
+    "t": "choice",
+    "ins": "Which department should handle this email?",
+    "options": [
+     "billing: invoices, payments, refunds",
+     "technical: bugs, outages, system errors",
+     "sales: pricing, new contracts",
+     "other: everything else"
+    ]
+   },
+   "q1": {
+    "t": "score",
+    "ins": "How urgent is this request?",
+    "levels": [
+     "not urgent",
+     "soon",
+     "critical deadline or blocking issue"
+    ]
+   },
+   "q2": {
+    "t": "noul",
+    "ins": "Does the customer ask for money back?",
+    "falseText": "no, the statement does not hold",
+    "trueText": "yes, the statement holds"
+   }
+  }
+ },
+ {
+  "name": "es",
+  "state": "{\"message\": \"Me cobraron dos veces la factura 4411, por favor devuélvanme el dinero.\"}",
+  "questions": {
+   "q0": {
+    "t": "choice",
+    "ins": "Which department should handle this email?",
+    "options": [
+     "billing: invoices, payments, refunds",
+     "technical: bugs, outages, system errors",
+     "sales: pricing, new contracts",
+     "other: everything else"
+    ]
+   },
+   "q1": {
+    "t": "score",
+    "ins": "How urgent is this request?",
+    "levels": [
+     "not urgent",
+     "soon",
+     "critical deadline or blocking issue"
+    ]
+   },
+   "q2": {
+    "t": "noul",
+    "ins": "Does the customer ask for money back?",
+    "falseText": "no, the statement does not hold",
+    "trueText": "yes, the statement holds"
+   }
+  }
+ },
+ {
+  "name": "hi",
+  "state": "{\"message\": \"मुझसे इनवॉइस 4411 के लिए दो बार शुल्क लिया गया, कृपया पैसे वापस करें।\"}",
+  "questions": {
+   "q0": {
+    "t": "choice",
+    "ins": "Which department should handle this email?",
+    "options": [
+     "billing: invoices, payments, refunds",
+     "technical: bugs, outages, system errors",
+     "sales: pricing, new contracts",
+     "other: everything else"
+    ]
+   },
+   "q1": {
+    "t": "score",
+    "ins": "How urgent is this request?",
+    "levels": [
+     "not urgent",
+     "soon",
+     "critical deadline or blocking issue"
+    ]
+   },
+   "q2": {
+    "t": "noul",
+    "ins": "Does the customer ask for money back?",
+    "falseText": "no, the statement does not hold",
+    "trueText": "yes, the statement holds"
+   }
+  }
+ },
+ {
+  "name": "ja",
+  "state": "{\"message\": \"請求書4411で二重に請求されました。返金してください。\"}",
+  "questions": {
+   "q0": {
+    "t": "choice",
+    "ins": "Which department should handle this email?",
+    "options": [
+     "billing: invoices, payments, refunds",
+     "technical: bugs, outages, system errors",
+     "sales: pricing, new contracts",
+     "other: everything else"
+    ]
+   },
+   "q1": {
+    "t": "score",
+    "ins": "How urgent is this request?",
+    "levels": [
+     "not urgent",
+     "soon",
+     "critical deadline or blocking issue"
+    ]
+   },
+   "q2": {
+    "t": "noul",
+    "ins": "Does the customer ask for money back?",
+    "falseText": "no, the statement does not hold",
+    "trueText": "yes, the statement holds"
+   }
+  }
+ },
+ {
+  "name": "ru",
+  "state": "{\"message\": \"С меня дважды списали деньги по счёту 4411, верните деньги.\"}",
+  "questions": {
+   "q0": {
+    "t": "choice",
+    "ins": "Which department should handle this email?",
+    "options": [
+     "billing: invoices, payments, refunds",
+     "technical: bugs, outages, system errors",
+     "sales: pricing, new contracts",
+     "other: everything else"
+    ]
+   },
+   "q1": {
+    "t": "score",
+    "ins": "How urgent is this request?",
+    "levels": [
+     "not urgent",
+     "soon",
+     "critical deadline or blocking issue"
+    ]
+   },
+   "q2": {
+    "t": "noul",
+    "ins": "Does the customer ask for money back?",
+    "falseText": "no, the statement does not hold",
+    "trueText": "yes, the statement holds"
+   }
+  }
+ },
+ {
+  "name": "empty_state",
+  "state": "",
+  "questions": {
+   "q0": {
+    "t": "choice",
+    "ins": "Which department should handle this email?",
+    "options": [
+     "billing: invoices, payments, refunds",
+     "technical: bugs, outages, system errors",
+     "sales: pricing, new contracts",
+     "other: everything else"
+    ]
+   },
+   "q1": {
+    "t": "score",
+    "ins": "How urgent is this request?",
+    "levels": [
+     "not urgent",
+     "soon",
+     "critical deadline or blocking issue"
+    ]
+   },
+   "q2": {
+    "t": "noul",
+    "ins": "Does the customer ask for money back?",
+    "falseText": "no, the statement does not hold",
+    "trueText": "yes, the statement holds"
+   }
+  }
+ },
+ {
+  "name": "long",
+  "state": "{\"from\": \"user@example.com\", \"subject\": \"Duplicate charge on invoice #4411\", \"body\": \"The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. The customer reports duplicate billing and requests a refund today. \"}",
+  "questions": {
+   "q0": {
+    "t": "choice",
+    "ins": "Which department should handle this email?",
+    "options": [
+     "billing: invoices, payments, refunds",
+     "technical: bugs, outages, system errors",
+     "sales: pricing, new contracts",
+     "other: everything else"
+    ]
+   },
+   "q1": {
+    "t": "score",
+    "ins": "How urgent is this request?",
+    "levels": [
+     "not urgent",
+     "soon",
+     "critical deadline or blocking issue"
+    ]
+   },
+   "q2": {
+    "t": "noul",
+    "ins": "Does the customer ask for money back?",
+    "falseText": "no, the statement does not hold",
+    "trueText": "yes, the statement holds"
+   }
+  }
+ },
+ {
+  "name": "conversation",
+  "state": "[{\"role\": \"user\", \"content\": \"I was charged twice for invoice 4411, please refund it today.\"}]",
+  "questions": {
+   "q0": {
+    "t": "choice",
+    "ins": "Which department should handle this email?",
+    "options": [
+     "billing: invoices, payments, refunds",
+     "technical: bugs, outages, system errors",
+     "sales: pricing, new contracts",
+     "other: everything else"
+    ]
+   },
+   "q1": {
+    "t": "score",
+    "ins": "How urgent is this request?",
+    "levels": [
+     "not urgent",
+     "soon",
+     "critical deadline or blocking issue"
+    ]
+   },
+   "q2": {
+    "t": "noul",
+    "ins": "Does the customer ask for money back?",
+    "falseText": "no, the statement does not hold",
+    "trueText": "yes, the statement holds"
+   }
+  }
+ },
+ {
+  "name": "mask_literals",
+  "state": "[MASK] <mask> hello [MASK] <mask>",
+  "questions": {
+   "q0": {
+    "t": "choice",
+    "ins": "Which department should handle this email?",
+    "options": [
+     "billing: invoices, payments, refunds",
+     "technical: bugs, outages, system errors",
+     "sales: pricing, new contracts",
+     "other: everything else"
+    ]
+   },
+   "q1": {
+    "t": "score",
+    "ins": "How urgent is this request?",
+    "levels": [
+     "not urgent",
+     "soon",
+     "critical deadline or blocking issue"
+    ]
+   },
+   "q2": {
+    "t": "noul",
+    "ins": "Does the customer ask for money back?",
+    "falseText": "no, the statement does not hold",
+    "trueText": "yes, the statement holds"
+   }
+  }
+ },
+ {
+  "name": "many_questions",
+  "state": "{\"from\": \"user@example.com\", \"subject\": \"Duplicate charge on invoice #4411\", \"body\": \"We were billed twice for March. Please refund the duplicate today or we will cancel our plan.\"}",
+  "questions": {
+   "q0": {
+    "t": "choice",
+    "ins": "Which department should handle this email?",
+    "options": [
+     "billing: invoices, payments, refunds",
+     "technical: bugs, outages, system errors",
+     "sales: pricing, new contracts",
+     "other: everything else"
+    ]
+   },
+   "q1": {
+    "t": "score",
+    "ins": "How urgent is this request?",
+    "levels": [
+     "not urgent",
+     "soon",
+     "critical deadline or blocking issue"
+    ]
+   },
+   "q2": {
+    "t": "noul",
+    "ins": "Does the customer ask for money back?",
+    "falseText": "no, the statement does not hold",
+    "trueText": "yes, the statement holds"
+   },
+   "q3": {
+    "t": "choice",
+    "ins": "Which department should handle this email?",
+    "options": [
+     "billing: invoices, payments, refunds",
+     "technical: bugs, outages, system errors",
+     "sales: pricing, new contracts",
+     "other: everything else"
+    ]
+   },
+   "q4": {
+    "t": "score",
+    "ins": "How urgent is this request?",
+    "levels": [
+     "not urgent",
+     "soon",
+     "critical deadline or blocking issue"
+    ]
+   },
+   "q5": {
+    "t": "noul",
+    "ins": "Does the customer ask for money back?",
+    "falseText": "no, the statement does not hold",
+    "trueText": "yes, the statement holds"
+   },
+   "q6": {
+    "t": "choice",
+    "ins": "Which department should handle this email?",
+    "options": [
+     "billing: invoices, payments, refunds",
+     "technical: bugs, outages, system errors",
+     "sales: pricing, new contracts",
+     "other: everything else"
+    ]
+   },
+   "q7": {
+    "t": "score",
+    "ins": "How urgent is this request?",
+    "levels": [
+     "not urgent",
+     "soon",
+     "critical deadline or blocking issue"
+    ]
+   },
+   "q8": {
+    "t": "noul",
+    "ins": "Does the customer ask for money back?",
+    "falseText": "no, the statement does not hold",
+    "trueText": "yes, the statement holds"
+   },
+   "q9": {
+    "t": "choice",
+    "ins": "Which department should handle this email?",
+    "options": [
+     "billing: invoices, payments, refunds",
+     "technical: bugs, outages, system errors",
+     "sales: pricing, new contracts",
+     "other: everything else"
+    ]
+   },
+   "q10": {
+    "t": "score",
+    "ins": "How urgent is this request?",
+    "levels": [
+     "not urgent",
+     "soon",
+     "critical deadline or blocking issue"
+    ]
+   },
+   "q11": {
+    "t": "noul",
+    "ins": "Does the customer ask for money back?",
+    "falseText": "no, the statement does not hold",
+    "trueText": "yes, the statement holds"
+   },
+   "q12": {
+    "t": "choice",
+    "ins": "Which department should handle this email?",
+    "options": [
+     "billing: invoices, payments, refunds",
+     "technical: bugs, outages, system errors",
+     "sales: pricing, new contracts",
+     "other: everything else"
+    ]
+   },
+   "q13": {
+    "t": "score",
+    "ins": "How urgent is this request?",
+    "levels": [
+     "not urgent",
+     "soon",
+     "critical deadline or blocking issue"
+    ]
+   },
+   "q14": {
+    "t": "noul",
+    "ins": "Does the customer ask for money back?",
+    "falseText": "no, the statement does not hold",
+    "trueText": "yes, the statement holds"
+   },
+   "q15": {
+    "t": "choice",
+    "ins": "Which department should handle this email?",
+    "options": [
+     "billing: invoices, payments, refunds",
+     "technical: bugs, outages, system errors",
+     "sales: pricing, new contracts",
+     "other: everything else"
+    ]
+   },
+   "q16": {
+    "t": "score",
+    "ins": "How urgent is this request?",
+    "levels": [
+     "not urgent",
+     "soon",
+     "critical deadline or blocking issue"
+    ]
+   },
+   "q17": {
+    "t": "noul",
+    "ins": "Does the customer ask for money back?",
+    "falseText": "no, the statement does not hold",
+    "trueText": "yes, the statement holds"
+   },
+   "q18": {
+    "t": "choice",
+    "ins": "Which department should handle this email?",
+    "options": [
+     "billing: invoices, payments, refunds",
+     "technical: bugs, outages, system errors",
+     "sales: pricing, new contracts",
+     "other: everything else"
+    ]
+   },
+   "q19": {
+    "t": "score",
+    "ins": "How urgent is this request?",
+    "levels": [
+     "not urgent",
+     "soon",
+     "critical deadline or blocking issue"
+    ]
+   }
+  }
+ },
+ {
+  "name": "structured",
+  "state": "{\"from\": \"user@example.com\", \"subject\": \"Duplicate charge on invoice #4411\", \"body\": \"We were billed twice for March. Please refund the duplicate today or we will cancel our plan.\"}",
+  "questions": {
+   "choice": {
+    "t": "choice",
+    "ins": "{\"task\": \"choose department\"}",
+    "options": [
+     "billing: {\"description\": \"refunds\"}",
+     "other: false"
+    ]
+   },
+   "score": {
+    "t": "score",
+    "ins": "Urgency?",
+    "levels": [
+     "{\"level\": \"low\"}",
+     "high"
+    ]
+   },
+   "noul": {
+    "t": "noul",
+    "ins": "Refund?",
+    "falseText": "no, the statement does not hold",
+    "trueText": "{\"reason\": \"money back\"}"
+   }
+  }
+ },
+ {
+  "name": "twenty_options",
+  "state": "{\"from\": \"user@example.com\", \"subject\": \"Duplicate charge on invoice #4411\", \"body\": \"We were billed twice for March. Please refund the duplicate today or we will cancel our plan.\"}",
+  "questions": {
+   "choice": {
+    "t": "choice",
+    "ins": "Which department handles billing?",
+    "options": [
+     "billing",
+     "department_0",
+     "department_1",
+     "department_2",
+     "department_3",
+     "department_4",
+     "department_5",
+     "department_6",
+     "department_7",
+     "department_8",
+     "department_9",
+     "department_10",
+     "department_11",
+     "department_12",
+     "department_13",
+     "department_14",
+     "department_15",
+     "department_16",
+     "department_17",
+     "department_18"
+    ]
+   }
+  }
+ }
+]

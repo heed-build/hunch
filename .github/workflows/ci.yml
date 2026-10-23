@@ -1,3 +1,5 @@
+# Changed by Hunch, 2026: swift build and swift test with the Metal toolchain; the checkpoint tests skip.
+# Derived from laya-mlx-swift (https://github.com/MstyAI/laya-mlx-swift, Apache-2.0); see NOTICE.
 name: CI
 
 on:
@@ -13,10 +15,14 @@ jobs:
     runs-on: macos-26
     steps:
       - uses: actions/checkout@v5
+      - name: Versions
+        run: |
+          xcodebuild -version
+          swift --version
+      - name: Install the Metal toolchain
+        run: xcodebuild -downloadComponent MetalToolchain
+      - name: Build
+        run: swift build --build-tests
       - name: Test
-        run: >-
-          xcodebuild
-          -scheme laya-mlx-swift
-          -destination 'platform=macOS,arch=arm64'
-          -skipPackagePluginValidation
-          test
+        # The parity and benchmark tests need downloaded checkpoints and skip here.
+        run: swift test --skip-build

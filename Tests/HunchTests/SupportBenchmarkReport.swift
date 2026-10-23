@@ -1,5 +1,8 @@
+// Changed by Hunch, 2026: reads Hunch answers; records the checkpoint revision and the machine's CPU name.
+// Derived from laya-mlx-swift (https://github.com/MstyAI/laya-mlx-swift, Apache-2.0); see NOTICE.
+
 import Foundation
-import LayaMLX
+import Hunch
 
 struct SupportCase: Decodable {
   let id: String
@@ -44,14 +47,11 @@ struct SupportReport: Encodable {
   let samples: [SupportSample]
 }
 
-func supportPrediction(from result: LayaResult) -> SupportLabels {
-  let urgency = result.answers["urgency"]!.probabilities.max {
-    $0.value == $1.value ? $0.key < $1.key : $0.value < $1.value
-  }!.key
-  return SupportLabels(
-    department: result.answers["department"]!.choice!,
-    refund: result.answers["refund"]!.booleanProbability! >= 0.5,
-    urgency: Int(urgency)!
+func supportPrediction(from answers: [String: Answer]) -> SupportLabels {
+  SupportLabels(
+    department: answers["department"]!.choice!,
+    refund: answers["refund"]!.probability! >= 0.5,
+    urgency: urgencyLevels.firstIndex(of: answers["urgency"]!.choice!)!
   )
 }
 
@@ -81,9 +81,9 @@ func makeSupportReport(
   return SupportReport(
     schemaVersion: 1,
     generatedAt: Date(),
-    machine: "Apple M3 Max, 16-core CPU, 40-core GPU, 128 GB memory",
+    machine: machineName(),
     platform: "macOS/arm64",
-    modelRevision: LayaModel.defaultRevision,
+    modelRevision: Checkpoint.english.revision,
     cases: cases.count,
     questionsPerCase: 3,
     measuredRuns: samples.count / cases.count,
@@ -115,4 +115,12 @@ extension JSONEncoder {
     encoder.dateEncodingStrategy = .iso8601
     return encoder
   }
+}
+
+private func machineName() -> String {
+  var size = 0
+  sysctlbyname("machdep.cpu.brand_string", nil, &size, nil, 0)
+  var buffer = [CChar](repeating: 0, count: max(1, size))
+  sysctlbyname("machdep.cpu.brand_string", &buffer, &size, nil, 0)
+  return String(cString: buffer)
 }

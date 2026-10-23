@@ -1,4 +1,7 @@
+<!-- Changed by Hunch, 2026: added a note on Hunch's port of this benchmark. Derived from laya-mlx-swift (Apache-2.0); see NOTICE. -->
 # Benchmarks
+
+These are laya-mlx-swift's measurements, kept as published. In Hunch the benchmark is `SupportBenchmarkTests`, which runs when `HUNCH_ENGLISH_CHECKPOINT` names a prepared English checkpoint (`swift test -c release --filter SupportBenchmarkTests`); it reaches the same 74% question accuracy on the origin checkpoint and writes its report to `/tmp/hunch-support-benchmark.json`.
 
 These numbers measure one request containing three decisions: department routing, refund detection, and urgency scoring.
 

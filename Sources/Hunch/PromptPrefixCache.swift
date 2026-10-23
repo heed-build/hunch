@@ -1,14 +1,17 @@
+// Changed by Hunch, 2026: keyed by Question.
+// Derived from laya-mlx-swift (https://github.com/MstyAI/laya-mlx-swift, Apache-2.0); see NOTICE.
+
 struct PromptPrefixCache {
   private let capacity: Int
-  private var values = [LayaQuestion: PreparedPromptPrefix]()
-  private var order = [LayaQuestion]()
+  private var values = [Question: PreparedPromptPrefix]()
+  private var order = [Question]()
 
   init(capacity: Int = 128) {
     self.capacity = capacity
   }
 
   mutating func value(
-    for question: LayaQuestion,
+    for question: Question,
     create: () throws -> PreparedPromptPrefix
   ) rethrows -> PreparedPromptPrefix {
     if let value = values[question] {

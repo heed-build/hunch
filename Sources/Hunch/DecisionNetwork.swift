@@ -1,3 +1,6 @@
+// Changed by Hunch, 2026: renamed the module class DecisionModel to DecisionNetwork.
+// Derived from laya-mlx-swift (https://github.com/MstyAI/laya-mlx-swift, Apache-2.0); see NOTICE.
+
 import MLX
 import MLXNN
 
@@ -66,7 +69,7 @@ final class DecisionHead: Module {
   }
 }
 
-final class DecisionModel: Module {
+final class DecisionNetwork: Module {
   @ModuleInfo var encoder: ModernBERT
   @ModuleInfo var head: DecisionHead
   @ModuleInfo(key: "type_emb") var typeEmbedding: Embedding

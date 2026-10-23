@@ -1,3 +1,6 @@
+// Changed by Hunch, 2026: renamed types (HunchError, QuestionKind).
+// Derived from laya-mlx-swift (https://github.com/MstyAI/laya-mlx-swift, Apache-2.0); see NOTICE.
+
 import MLX
 
 struct InferenceBatch {
@@ -9,7 +12,7 @@ struct InferenceBatch {
 
   init(_ questions: [PreparedQuestion], padTokenID: Int) throws {
     guard !questions.isEmpty else {
-      throw LayaError.invalidQuestion("At least one question is required.")
+      throw HunchError.invalidQuestion("At least one question is required.")
     }
     let length = questions.map(\.tokenIDs.count).max()!
     let markerCount = max(2, questions.map(\.markers.count).max()!)
@@ -33,16 +36,6 @@ struct InferenceBatch {
     attentionMask = MLXArray(attention, [questions.count, length])
     markerPositions = MLXArray(markers, [questions.count, markerCount])
     markerMask = MLXArray(markerValidity, [questions.count, markerCount])
-    questionTypes = MLXArray(questions.map { Int32($0.type.index) })
-  }
-}
-
-extension LayaQuestionType {
-  var index: Int {
-    switch self {
-    case .choice: 0
-    case .score: 1
-    case .boolean: 2
-    }
+    questionTypes = MLXArray(questions.map { Int32($0.kind.index) })
   }
 }

@@ -1,5 +1,6 @@
 // swift-tools-version: 6.0
-// Changed by Hunch, 2026: renamed the package and library to Hunch, dropped the direct Hub dependency.
+// Changed by Hunch, 2026: renamed the package and library to Hunch, dropped the direct Hub dependency;
+// added MLXOptimizers for head training.
 // Derived from laya-mlx-swift (https://github.com/MstyAI/laya-mlx-swift, Apache-2.0); see NOTICE.
 
 import PackageDescription
@@ -21,6 +22,7 @@ let package = Package(
         .product(name: "MLX", package: "mlx-swift"),
         .product(name: "MLXNN", package: "mlx-swift"),
         .product(name: "MLXFast", package: "mlx-swift"),
+        .product(name: "MLXOptimizers", package: "mlx-swift"),
         .product(name: "Tokenizers", package: "swift-transformers"),
       ]
     ),

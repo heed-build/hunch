@@ -1,4 +1,5 @@
-// Changed by Hunch, 2026: renamed the module class DecisionModel to DecisionNetwork.
+// Changed by Hunch, 2026: renamed the module class DecisionModel to DecisionNetwork; split the forward pass into
+// the frozen encoder and the trainable decision part, and named the parameters head training updates.
 // Derived from laya-mlx-swift (https://github.com/MstyAI/laya-mlx-swift, Apache-2.0); see NOTICE.
 
 import MLX
@@ -94,6 +95,14 @@ final class DecisionNetwork: Module {
     }
   }
 
+  /// The parameter name prefixes head training updates: the decision head's layers, the question type embedding and
+  /// the option scorer. The encoder and the action head stay as the checkpoint has them.
+  static let headPrefixes = ["head.", "type_emb.", "scorer."]
+
+  static func isHeadParameter(_ name: String) -> Bool {
+    headPrefixes.contains { name.hasPrefix($0) }
+  }
+
   func callAsFunction(
     tokenIDs: MLXArray,
     attentionMask: MLXArray,
@@ -101,19 +110,44 @@ final class DecisionNetwork: Module {
     markerMask: MLXArray,
     questionTypes: MLXArray
   ) -> (logits: MLXArray, actions: MLXArray) {
-    var hidden = encoder(tokenIDs, attentionMask: attentionMask)
-    hidden = hidden + typeEmbedding(questionTypes)[0..., .newAxis, 0...]
-    let mask = attentionMask.asType(.bool)[0..., .newAxis, .newAxis, 0...]
-    hidden = head(hidden, mask: mask)
+    decide(
+      encoded: encoder(tokenIDs, attentionMask: attentionMask), attentionMask: attentionMask,
+      markerPositions: markerPositions, markerMask: markerMask, questionTypes: questionTypes)
+  }
 
+  /// The option logits only, from encoder output: what head training differentiates.
+  func optionLogits(
+    encoded: MLXArray, attentionMask: MLXArray, markerPositions: MLXArray, markerMask: MLXArray,
+    questionTypes: MLXArray
+  ) -> MLXArray {
+    let hidden = headStates(encoded: encoded, attentionMask: attentionMask, questionTypes: questionTypes)
+    return markerLogits(hidden, markerPositions: markerPositions, markerMask: markerMask)
+  }
+
+  private func headStates(encoded: MLXArray, attentionMask: MLXArray, questionTypes: MLXArray) -> MLXArray {
+    let hidden = encoded + typeEmbedding(questionTypes)[0..., .newAxis, 0...].asType(encoded.dtype)
+    let mask = attentionMask.asType(.bool)[0..., .newAxis, .newAxis, 0...]
+    return head(hidden, mask: mask)
+  }
+
+  private func markerLogits(_ hidden: MLXArray, markerPositions: MLXArray, markerMask: MLXArray) -> MLXArray {
     let length = hidden.dim(1)
     let dimensions = hidden.dim(2)
     let batchOffsets = MLXArray.arange(hidden.dim(0))[0..., .newAxis] * length
     let indices = (batchOffsets + maximum(markerPositions, 0)).reshaped(-1)
     let markers = hidden.reshaped(-1, dimensions).take(indices, axis: 0)
       .reshaped(hidden.dim(0), markerPositions.dim(1), dimensions)
-    var logits = scorer(markers).squeezed(axis: -1).asType(.float32)
-    logits = which(markerMask, logits, MLXArray(-10_000 as Float))
+    let logits = scorer(markers).squeezed(axis: -1).asType(.float32)
+    return which(markerMask, logits, MLXArray(-10_000 as Float))
+  }
+
+  /// Everything after the encoder: the decision head, the option logits and the action head.
+  func decide(
+    encoded: MLXArray, attentionMask: MLXArray, markerPositions: MLXArray, markerMask: MLXArray,
+    questionTypes: MLXArray
+  ) -> (logits: MLXArray, actions: MLXArray) {
+    let hidden = headStates(encoded: encoded, attentionMask: attentionMask, questionTypes: questionTypes)
+    let logits = markerLogits(hidden, markerPositions: markerPositions, markerMask: markerMask)
     let probabilities = softmax(logits, axis: -1)
     let count = maximum(markerMask.sum(axis: -1), 2).asType(.float32)
     let entropy = -(probabilities * log(maximum(probabilities, 1e-9))).sum(axis: -1) / log(count)

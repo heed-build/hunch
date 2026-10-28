@@ -271,7 +271,8 @@ struct HeadTrainer {
 
   @discardableResult
   func train(
-    _ examples: [PreparedExample], options: TrainingOptions, progress: (TrainingProgress) -> Void
+    _ examples: [PreparedExample], options: TrainingOptions, progress: (TrainingProgress) -> Void,
+    cancelled: () -> Bool = { Task.isCancelled }
   ) throws -> TrainingReport {
     let started = Date()
     // Trains at float32, then keeps the head in the type the checkpoint has it in.
@@ -330,7 +331,7 @@ struct HeadTrainer {
       var epochLoss = 0.0
       var epochWeight = 0.0
       for index in batches.indices.shuffled(using: &generator) {
-        try Task.checkCancellation()
+        if cancelled() { throw CancellationError() }
         let batch = batches[index]
         let hidden = try encoded(index).asType(.float32)
         let loss = try mlxCall("Training failed") {

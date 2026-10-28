@@ -143,26 +143,17 @@ final class TrainingTests: XCTestCase {
     }
   }
 
-  func testCancellingStopsBetweenSteps() async throws {
-    let outcome = await Task.detached { Self.trainInACancelledTask() }.value
-    XCTAssertEqual(outcome, "cancelled after 0 steps")
-  }
-
-  /// Cancels the task it runs in, then trains: the first step must not be taken.
-  private static func trainInACancelledTask() -> String {
-    withUnsafeCurrentTask { $0?.cancel() }
-    var steps = 0
-    do {
-      try onCPU {
-        let model = try tinyModel()
-        let prepared = try HeadTrainer.prepare(examples, builder: model.builder)
-        try HeadTrainer(model: model).train(prepared, options: training) { _ in steps += 1 }
-      }
-      return "finished after \(steps) steps"
-    } catch is CancellationError {
-      return "cancelled after \(steps) steps"
-    } catch {
-      return "\(error)"
+  func testCancellingStopsBetweenSteps() throws {
+    try onCPU {
+      let model = try tinyModel()
+      let prepared = try HeadTrainer.prepare(Self.examples, builder: model.builder)
+      var steps = 0
+      XCTAssertThrowsError(
+        try HeadTrainer(model: model).train(prepared, options: Self.training, progress: { _ in steps += 1 }) {
+          true
+        }
+      ) { XCTAssertTrue($0 is CancellationError) }
+      XCTAssertEqual(steps, 0)
     }
   }
 

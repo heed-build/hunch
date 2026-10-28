@@ -159,7 +159,7 @@ if after.accuracy >= before.accuracy {
 - `answer` is the expected option's label: a choice label, a score level, or `"true"`/`"false"`. `weight` scales an
   example's share of the loss across the whole set.
 - A trained head is in memory until `saveHead` writes it (a safetensors file, about 52 MB for the English
-  checkpoint and 30 MB for the multilingual one, at float16). `loadHead(from:)` or `Options(head:)` uses a saved one,
+  checkpoint at float16, measured; somewhat smaller for the multilingual one). `loadHead(from:)` or `Options(head:)` uses a saved one,
   also after `unload()`; `resetHead()` goes back to the checkpoint's own. A head file only loads on the checkpoint
   it was trained from.
 - Cancelling the task stops between steps and restores the head the run started from.

@@ -1,4 +1,4 @@
-// Changed by Hunch, 2026: renamed LayaError to HunchError; added calibration, download and checksum cases.
+// Changed by Hunch, 2026: renamed LayaError to HunchError; added calibration, download, checksum and training cases.
 // Derived from laya-mlx-swift (https://github.com/MstyAI/laya-mlx-swift, Apache-2.0); see NOTICE.
 
 import Foundation
@@ -12,11 +12,13 @@ public enum HunchError: Error, LocalizedError, Sendable, Equatable {
   case inferenceFailed(String)
   case downloadFailed(file: String, reason: String)
   case checksumMismatch(file: String, expected: String, actual: String)
+  /// Head training was given examples or options it cannot use.
+  case invalidTraining(String)
 
   public var errorDescription: String? {
     switch self {
     case .invalidModel(let message), .invalidQuestion(let message), .invalidCalibration(let message),
-      .inferenceFailed(let message):
+      .inferenceFailed(let message), .invalidTraining(let message):
       message
     case .modelNotPrepared(let directory):
       "No checkpoint is prepared at \(directory.path). Call ModelStore.prepare first."

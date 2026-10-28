@@ -129,6 +129,43 @@ await model.unload()  // frees the weights; the next answer loads them again
   between chance and near-perfect for "is it waiting for the user" on the English checkpoint.
 - **Memory.** The English checkpoint peaks near 1.8 GB with the default 256 MiB cache limit.
 
+## Train the head on your own labels
+
+The checkpoints are a base to specialise, and the cheapest way to specialise one is to fine-tune its decision head
+(two transformer layers, the question type embedding and the option scorer) on labelled examples while the encoder
+stays frozen. It runs on the Mac, in the model's own queue, in seconds to minutes for a few hundred examples.
+
+```swift
+let examples = [
+  TrainingExample(
+    state: "Allow edits to Package.swift? [y/n]", question: .noul(instructions: "The agent is waiting for the user."),
+    answer: "true"),
+  // …
+]
+let (train, heldOut) = split(examples)                 // keep some aside to judge the result
+
+let before = try await model.evaluate(heldOut)         // accuracy and mean loss with the head in use
+try await model.trainHead(on: train, options: .init(epochs: 3, learningRate: 5e-5)) { progress in
+  print(progress.step, "/", progress.steps, progress.loss)
+}
+let after = try await model.evaluate(heldOut)
+if after.accuracy >= before.accuracy {
+  try await model.saveHead(to: headURL, metadata: ["examples": "\(train.count)"])
+} else {
+  try await model.resetHead()                          // or loadHead(from:) the previous one
+}
+```
+
+- `answer` is the expected option's label: a choice label, a score level, or `"true"`/`"false"`. `weight` scales an
+  example's share of the loss across the whole set.
+- A trained head is in memory until `saveHead` writes it (a safetensors file, about 52 MB for the English
+  checkpoint at float16, measured; somewhat smaller for the multilingual one). `loadHead(from:)` or `Options(head:)` uses a saved one,
+  also after `unload()`; `resetHead()` goes back to the checkpoint's own. A head file only loads on the checkpoint
+  it was trained from.
+- Cancelling the task stops between steps and restores the head the run started from.
+- Decide on held-out examples, not on the training loss: a head that fits a few dozen examples perfectly can still
+  answer new ones worse than the checkpoint did.
+
 ## Limits
 
 - **Not zero-shot.** The checkpoints are a base to specialise. On terminal and review text they were near perfect
@@ -167,8 +204,9 @@ bundle in the resources of every loaded bundle, so:
 
 - **Xcode app targets** copy the bundle into the app for you.
 - **Apps assembled from `swift build`** must copy it themselves, into `<App>.app/Contents/Resources/`, before
-  signing (it is a nested bundle, signed with the app). `swift test` and command-line tools find it next to the
-  executable without help.
+  signing (it is a nested bundle, signed with the app). Command-line tools find it next to the executable.
+- **Swift before 6.4** builds with SwiftPM's older native build system by default, which does not compile the
+  shaders at all. Build with `--build-system swiftbuild` there (this repository's workflow does, on Swift 6.3).
 - **CI** needs the Metal toolchain before building: `xcodebuild -downloadComponent MetalToolchain` (this
   repository's workflow does exactly that on `macos-26`). Without it the build fails.
 

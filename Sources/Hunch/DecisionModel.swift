@@ -1,7 +1,7 @@
 // Changed by Hunch, 2026: LayaAgent became DecisionModel: answers Hunch Questions, runs on its own serial queue
 // instead of the cooperative pool, loads lazily and can unload, sets MLX's cache limit, applies a Calibration
 // (clamped temperatures, binning, languages), reads special tokens from the tokenizer config, maps origin tensor
-// names, supports keep-end truncation, and turns MLX errors into thrown errors.
+// names, supports keep-end truncation, turns MLX errors into thrown errors, and can use a trained head (Training.swift).
 // Derived from laya-mlx-swift (https://github.com/MstyAI/laya-mlx-swift, Apache-2.0); see NOTICE.
 
 import Dispatch
@@ -22,11 +22,16 @@ public actor DecisionModel {
     public var batchSize: Int
     /// Replaces the checkpoint's own calibration when set.
     public var calibration: Calibration?
+    /// A head file written by `saveHead`, used instead of the checkpoint's own head.
+    public var head: URL?
 
-    public init(truncation: Truncation = .keepStart, batchSize: Int = 16, calibration: Calibration? = nil) {
+    public init(
+      truncation: Truncation = .keepStart, batchSize: Int = 16, calibration: Calibration? = nil, head: URL? = nil
+    ) {
       self.truncation = truncation
       self.batchSize = batchSize
       self.calibration = calibration
+      self.head = head
     }
   }
 
@@ -39,7 +44,9 @@ public actor DecisionModel {
   private let queue: DispatchSerialQueue
   private var loaded: LoadedModel?
   private var loading: Task<LoadedModel, any Error>?
-  private var promptCache = PromptPrefixCache()
+  var promptCache = PromptPrefixCache()
+  /// The head file in use; loaded again after `unload()`.
+  var headURL: URL?
 
   public nonisolated var unownedExecutor: UnownedSerialExecutor { queue.asUnownedSerialExecutor() }
 
@@ -52,6 +59,7 @@ public actor DecisionModel {
     self.directory = directory
     self.options = options
     queue = InferenceExecutor.makeQueue()
+    headURL = options.head
     if let cacheLimit { Memory.cacheLimit = cacheLimit }
     _ = try await model()
   }
@@ -110,7 +118,7 @@ public actor DecisionModel {
     return prepared.sorted { $0.id < $1.id }
   }
 
-  private func model() async throws -> LoadedModel {
+  func model() async throws -> LoadedModel {
     if let loaded { return loaded }
     if let loading { return try await loading.value }
     let task = Task { try await self.load() }
@@ -139,7 +147,7 @@ public actor DecisionModel {
     let builder = try PromptBuilder(
       encoder: encoder, maxLength: configuration.agent.maxLength,
       headMaxLength: configuration.agent.headMaxLength, specials: specials, truncation: options.truncation)
-    let network = try mlx("Loading the checkpoint failed") {
+    let network = try mlxCall("Loading the checkpoint failed") {
       let network = DecisionNetwork(configuration)
       let loaded = try MLX.loadArrays(url: directory.appending(path: "model.safetensors"))
       var weights = [String: MLXArray]()
@@ -152,9 +160,12 @@ public actor DecisionModel {
       eval(network.parameters())
       return network
     }
-    return LoadedModel(
+    let model = LoadedModel(
       network: network, builder: builder, padTokenID: padTokenID,
-      calibration: options.calibration ?? Calibration(configuration.agent))
+      calibration: options.calibration ?? Calibration(configuration.agent),
+      hiddenSize: configuration.encoder.hiddenSize)
+    if let headURL { try HeadTrainer(model: model).load(headURL) }
+    return model
   }
 }
 
@@ -164,18 +175,27 @@ final class LoadedModel: @unchecked Sendable {
   let builder: PromptBuilder
   let padTokenID: Int
   let calibration: Calibration
+  let hiddenSize: Int
+  /// The checkpoint's own head, for `resetHead`.
+  let baseHead: [String: MLXArray]
 
-  init(network: DecisionNetwork, builder: PromptBuilder, padTokenID: Int, calibration: Calibration) {
+  init(network: DecisionNetwork, builder: PromptBuilder, padTokenID: Int, calibration: Calibration, hiddenSize: Int) {
     self.network = network
     self.builder = builder
     self.padTokenID = padTokenID
     self.calibration = calibration
+    self.hiddenSize = hiddenSize
+    var head = [String: MLXArray]()
+    for (name, value) in network.parameters().flattened() where DecisionNetwork.isHeadParameter(name) {
+      head[name] = value
+    }
+    baseHead = HeadTrainer.snapshot(head)
   }
 
   /// One forward pass: the option logits (row-major, `width` per question) and the action probabilities.
   func forward(_ questions: [PreparedQuestion]) throws -> (logits: [Float], width: Int, actions: [[Float]]) {
     let batch = try InferenceBatch(questions, padTokenID: padTokenID)
-    return try mlx("Inference failed") {
+    return try mlxCall("Inference failed") {
       let output = network(
         tokenIDs: batch.tokenIDs,
         attentionMask: batch.attentionMask,
@@ -195,7 +215,7 @@ final class LoadedModel: @unchecked Sendable {
 }
 
 /// Runs `body` with MLX errors turned into `HunchError.inferenceFailed` instead of ending the process.
-private func mlx<R>(_ what: String, _ body: () throws -> R) throws -> R {
+func mlxCall<R>(_ what: String, _ body: () throws -> R) throws -> R {
   do {
     return try withError { try body() }
   } catch let error as HunchError {

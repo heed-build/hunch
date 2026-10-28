@@ -28,10 +28,16 @@ its end; an empty state adds no tokens; MLX errors are thrown instead of ending 
 the origin repositories with sha256 checks instead of a third-party conversion; and an opt-in cleaner prepares
 terminal text.
 
+## Requirements
+
+- macOS 14 or later on Apple silicon (MLX needs a Metal GPU; there is no Intel or CPU-only path)
+- Swift 6 tools; Xcode 26 or later with its Metal toolchain to build (see [Build and test](#build-and-test))
+- Disk for a checkpoint (647 to 807 MiB) and memory for it (the English checkpoint peaks near 1.8 GB)
+
 ## Add the package
 
 ```swift
-.package(url: "https://github.com/heed-build/hunch", branch: "main")
+.package(url: "https://github.com/heed-build/hunch", from: "0.2.0")
 ```
 
 and add the `Hunch` product to your target.
@@ -123,6 +129,19 @@ await model.unload()  // frees the weights; the next answer loads them again
   between chance and near-perfect for "is it waiting for the user" on the English checkpoint.
 - **Memory.** The English checkpoint peaks near 1.8 GB with the default 256 MiB cache limit.
 
+## Limits
+
+- **Not zero-shot.** The checkpoints are a base to specialise. On terminal and review text they were near perfect
+  for some statements ("it is waiting for the user", "it is stuck") and at chance for others (urgency). Measure on
+  your own labelled data first.
+- **Few options.** A choice question's heading and options share the checkpoint's head budget (`head_max_len`, 192
+  tokens on the English checkpoint, 256 on the multilingual one). With many options each is cut short (to 16 tokens
+  at 11 options, fewer beyond), and the English checkpoint's calibration for 11 or more options is unusable (its 0.1
+  temperature, clamped up to 0.5, still overstates confidence). Keep choices to a handful of short, distinct labels; picking one of dozens of names is a job for something else.
+- **One state per pass.** Every question re-encodes the state, so cost grows linearly with questions and with state
+  length; batch questions about the same state into one `answer` call.
+- **English first.** The multilingual checkpoint answered near chance on the terminal statements above.
+
 ## Build and test
 
 ```bash
@@ -138,9 +157,22 @@ MetalToolchain` on Xcode 26 and later). The unit tests need no weights and no GP
 HUNCH_ENGLISH_CHECKPOINT=… HUNCH_MULTILINGUAL_CHECKPOINT=… swift test
 ```
 
-`HUNCH_ENGLISH_CHECKPOINT` also enables the support benchmark in [BENCHMARKS.md](BENCHMARKS.md). An app built with
-SwiftPM rather than Xcode must ship `mlx-swift_Cmlx.bundle` (it holds `default.metallib`) next to its executable or in
-its `Contents/Resources`.
+`HUNCH_ENGLISH_CHECKPOINT` also enables the support benchmark in [BENCHMARKS.md](BENCHMARKS.md).
+
+### Shipping the Metal shaders
+
+MLX's kernels are compiled into `default.metallib` while the package builds; SwiftPM puts it in the resource bundle
+`mlx-swift_Cmlx.bundle` next to the built products. At run time MLX looks for that
+bundle in the resources of every loaded bundle, so:
+
+- **Xcode app targets** copy the bundle into the app for you.
+- **Apps assembled from `swift build`** must copy it themselves, into `<App>.app/Contents/Resources/`, before
+  signing (it is a nested bundle, signed with the app). `swift test` and command-line tools find it next to the
+  executable without help.
+- **CI** needs the Metal toolchain before building: `xcodebuild -downloadComponent MetalToolchain` (this
+  repository's workflow does exactly that on `macos-26`). Without it the build fails.
+
+When the metallib is missing, the first model call fails with "Failed to load the default metallib".
 
 ## License
 

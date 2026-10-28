@@ -1,4 +1,4 @@
-<!-- Changed by Hunch, 2026: added a note on Hunch's port of this benchmark. Derived from laya-mlx-swift (Apache-2.0); see NOTICE. -->
+<!-- Changed by Hunch, 2026: added a note on Hunch's port of this benchmark and its run command. Derived from laya-mlx-swift (Apache-2.0); see NOTICE. -->
 # Benchmarks
 
 These are laya-mlx-swift's measurements, kept as published. In Hunch the benchmark is `SupportBenchmarkTests`, which runs when `HUNCH_ENGLISH_CHECKPOINT` names a prepared English checkpoint (`swift test -c release --filter SupportBenchmarkTests`); it reaches the same 74% question accuracy on the origin checkpoint and writes its report to `/tmp/hunch-support-benchmark.json`.
@@ -29,18 +29,10 @@ The dataset is small and synthetic. It tests this routing workload, not general 
 
 Swift raw samples and predictions are in [`Benchmarks/results/m3-max-support.json`](Benchmarks/results/m3-max-support.json), with the Python comparison in [`Benchmarks/results/m3-max-python-mlx-summary.json`](Benchmarks/results/m3-max-python-mlx-summary.json). The earlier ONNX and Jev evidence is in the [`laya-onnx` benchmark report](https://github.com/MstyAI/laya-onnx/blob/main/evidence/jev-vs-laya-2026-09-20.json).
 
-Run the Swift benchmark with:
+Run Hunch's port of the benchmark with:
 
 ```bash
-xcodebuild \
-  -scheme laya-mlx-swift \
-  -configuration Release \
-  -destination 'platform=macOS,arch=arm64' \
-  -skipPackagePluginValidation \
-  -only-testing:LayaMLXTests/SupportBenchmarkTests/testSupportBenchmark \
-  test
+HUNCH_ENGLISH_CHECKPOINT=<prepared directory> swift test -c release --filter SupportBenchmarkTests
 ```
-
-The benchmark uses the prepared default model or the standard Hugging Face cache location.
 
 </details>

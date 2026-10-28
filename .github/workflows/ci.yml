@@ -23,14 +23,15 @@ jobs:
       - name: Install the Metal toolchain
         run: xcodebuild -downloadComponent MetalToolchain
       - name: Build
-        run: swift build --build-tests
-      # MLX looks for mlx-swift_Cmlx.bundle (its default.metallib) in the resources of every loaded bundle. SwiftPM's
-      # own build system leaves it next to the products, where the xctest runner's bundles do not look; Xcode's build
-      # system copies it into the test bundle. Do what an app does: put it in Contents/Resources. The training tests
-      # need it even on the CPU, as MLX sets up its Metal device first.
+        # Swift's newer build system compiles MLX's Metal shaders into mlx-swift_Cmlx.bundle; the older native one
+        # (the default before Swift 6.4) leaves them out, and every MLX call then fails to find default.metallib.
+        run: swift build --build-tests --build-system swiftbuild
+      # MLX looks for mlx-swift_Cmlx.bundle (its default.metallib) in the resources of every loaded bundle; the newer
+      # build system copies it into the test bundle, as Xcode does for an app. Fail here, not in the tests, if it is
+      # missing; copy it in if only the test bundle lacks it. The training tests need it even on the CPU.
       - name: Put MLX's shaders in the test bundle
         run: |
-          bin="$(swift build --show-bin-path)"
+          bin="$(swift build --build-system swiftbuild --show-bin-path)"
           find "$bin/mlx-swift_Cmlx.bundle" -name default.metallib | grep -q . || { echo "no default.metallib" >&2; exit 1; }
           if [ ! -d "$bin/HunchTests.xctest/Contents/Resources/mlx-swift_Cmlx.bundle" ]; then
             mkdir -p "$bin/HunchTests.xctest/Contents/Resources"
@@ -38,4 +39,4 @@ jobs:
           fi
       - name: Test
         # The parity and benchmark tests need downloaded checkpoints and skip here.
-        run: swift test --skip-build
+        run: swift test --skip-build --build-system swiftbuild

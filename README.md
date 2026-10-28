@@ -205,9 +205,8 @@ bundle in the resources of every loaded bundle, so:
 - **Xcode app targets** copy the bundle into the app for you.
 - **Apps assembled from `swift build`** must copy it themselves, into `<App>.app/Contents/Resources/`, before
   signing (it is a nested bundle, signed with the app). Command-line tools find it next to the executable.
-- **`swift test`** with SwiftPM's own build system (what this repository's CI gets) leaves the bundle next to the
-  products, where the test runner does not look: copy it into `<Tests>.xctest/Contents/Resources/` after building, as
-  this repository's workflow does. Xcode's build system does that already.
+- **Swift before 6.4** builds with SwiftPM's older native build system by default, which does not compile the
+  shaders at all. Build with `--build-system swiftbuild` there (this repository's workflow does, on Swift 6.3).
 - **CI** needs the Metal toolchain before building: `xcodebuild -downloadComponent MetalToolchain` (this
   repository's workflow does exactly that on `macos-26`). Without it the build fails.
 

@@ -220,6 +220,7 @@ struct HeadTrainer {
     eval(network.parameters())
   }
 
+  @discardableResult
   func load(_ url: URL) throws -> [String: String] {
     let (arrays, metadata) = try mlxCall("Loading the head failed") { try MLX.loadArraysAndMetadata(url: url) }
     guard metadata[HeadFile.formatKey] == HeadFile.format else {
@@ -268,6 +269,7 @@ struct HeadTrainer {
       count: examples.count, correct: correct, meanLoss: examples.isEmpty ? 0 : loss / Double(examples.count))
   }
 
+  @discardableResult
   func train(
     _ examples: [PreparedExample], options: TrainingOptions, progress: (TrainingProgress) -> Void
   ) throws -> TrainingReport {

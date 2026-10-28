@@ -1,4 +1,5 @@
-# Changed by Hunch, 2026: swift build and swift test with the Metal toolchain; the checkpoint tests skip.
+# Changed by Hunch, 2026: swift build and swift test with the Metal toolchain and MLX's shaders in the test bundle;
+# the checkpoint tests skip.
 # Derived from laya-mlx-swift (https://github.com/MstyAI/laya-mlx-swift, Apache-2.0); see NOTICE.
 name: CI
 
@@ -23,6 +24,18 @@ jobs:
         run: xcodebuild -downloadComponent MetalToolchain
       - name: Build
         run: swift build --build-tests
+      # MLX looks for mlx-swift_Cmlx.bundle (its default.metallib) in the resources of every loaded bundle. SwiftPM's
+      # own build system leaves it next to the products, where the xctest runner's bundles do not look; Xcode's build
+      # system copies it into the test bundle. Do what an app does: put it in Contents/Resources. The training tests
+      # need it even on the CPU, as MLX sets up its Metal device first.
+      - name: Put MLX's shaders in the test bundle
+        run: |
+          bin="$(swift build --show-bin-path)"
+          find "$bin/mlx-swift_Cmlx.bundle" -name default.metallib | grep -q . || { echo "no default.metallib" >&2; exit 1; }
+          if [ ! -d "$bin/HunchTests.xctest/Contents/Resources/mlx-swift_Cmlx.bundle" ]; then
+            mkdir -p "$bin/HunchTests.xctest/Contents/Resources"
+            ditto "$bin/mlx-swift_Cmlx.bundle" "$bin/HunchTests.xctest/Contents/Resources/mlx-swift_Cmlx.bundle"
+          fi
       - name: Test
         # The parity and benchmark tests need downloaded checkpoints and skip here.
         run: swift test --skip-build
